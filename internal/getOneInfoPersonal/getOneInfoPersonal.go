@@ -1,16 +1,20 @@
-package getInfoPersonal
+package getOneInfoPersonal
 
 import "context"
 
 type Repository interface {
-	GetInfoPersonalRepo(ctx context.Context) ([]GetInfoPersonalResponse, error)
+	GetOneInfoPersonalRepo(ctx context.Context, DocumentNumber string) (GetOneInfoPersonalResponse, error)
 }
 
 type Service interface {
-	GetInfoPersonalSvc(ctx context.Context) ([]GetInfoPersonalResponse, error)
+	GetOneInfoPersonalSvc(ctx context.Context, DocumentNumber string) (GetOneInfoPersonalResponse, error)
 }
 
-type GetInfoPersonalResponse struct {
+type GetOneInfoPersonalRequest struct {
+	DocumentNumber string `json:"documentNumber"`
+}
+
+type GetOneInfoPersonalResponse struct {
 	FirstName           string `json:"firstName"`
 	SecondName          string `json:"secondName"`
 	LastName            string `json:"lastName"`

@@ -16,13 +16,13 @@ func NewGetInfoPersonalSvc(repoDB getInfoPersonal.Repository, logger kitlog.Logg
 	return &GetInfoPersonalSvc{repoDB: repoDB, logger: logger}
 }
 
-func (g *GetInfoPersonalSvc) GetInfoPersonalSvc(ctx context.Context, DocumentNumber string) (getInfoPersonal.GetInfoPersonalResponse, error) {
+func (g *GetInfoPersonalSvc) GetInfoPersonalSvc(ctx context.Context) ([]getInfoPersonal.GetInfoPersonalResponse, error) {
 	g.logger.Log("Starting subscription", constants.UUID, ctx.Value(constants.UUID))
 
-	resp, err := g.repoDB.GetInfoPersonalRepo(ctx, DocumentNumber)
+	resp, err := g.repoDB.GetInfoPersonalRepo(ctx)
 	if err != nil {
 		g.logger.Log("Error - Information  could not be obtained", constants.UUID, ctx.Value(constants.UUID))
-		return getInfoPersonal.GetInfoPersonalResponse{}, err
+		return []getInfoPersonal.GetInfoPersonalResponse{}, err
 	}
 	return resp, nil
 }

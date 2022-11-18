@@ -11,25 +11,28 @@ import (
 	"sgp-access-info-svc/kit/constants"
 )
 
-func NewGetInfoPersonalHandler(path string, endpoints endpoint.Endpoint) http.Handler {
+func NewGetOneInfoPersonalHandler(path string, endpoints endpoint.Endpoint) http.Handler {
 	r := mux.NewRouter()
 	r.Handle(path,
 		httptransport.NewServer(endpoints,
-			DecodeRequestGetInfoPersonal,
-			EncodeRequestGetInfoPersonal,
+			DecodeRequestGetOneInfoPersonal,
+			EncodeRequestGetOneInfoPersonal,
 		)).Methods(http.MethodGet)
 	return r
 }
 
-func DecodeRequestGetInfoPersonal(ctx context.Context, r *http.Request) (interface{}, error) {
+func DecodeRequestGetOneInfoPersonal(ctx context.Context, r *http.Request) (interface{}, error) {
 	processID, _ := uuid.NewUUID()
 	ctx = context.WithValue(ctx, constants.UUID, processID.String())
-	return GetInfoPersonalInternalRequest{ctx: ctx}, nil
+	var confRequest GetOneInfoPersonalInternalRequest
+	err := json.NewDecoder(r.Body).Decode(&confRequest)
+	confRequest.ctx = ctx
+	return confRequest, err
 }
 
-func EncodeRequestGetInfoPersonal(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+func EncodeRequestGetOneInfoPersonal(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	resp, _ := response.(GetInfoPersonalInternalResponse)
+	resp, _ := response.(GetOneInfoPersonalInternalResponse)
 	if resp.Err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		switch resp.Err {

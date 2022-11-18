@@ -9,7 +9,7 @@ import (
 func MakeGetInfoPersonalEndpoint(s getInfoPersonal.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(GetInfoPersonalInternalRequest)
-		resp, err := s.GetInfoPersonalSvc(req.ctx, req.DocumentNumber)
+		resp, err := s.GetInfoPersonalSvc(req.ctx)
 		return GetInfoPersonalInternalResponse{
 			Response: resp,
 			Err:      err,
@@ -23,6 +23,5 @@ type GetInfoPersonalInternalResponse struct {
 }
 
 type GetInfoPersonalInternalRequest struct {
-	DocumentNumber string `json:"documentNumber"`
-	ctx            context.Context
+	ctx context.Context
 }

@@ -1,5 +1,5 @@
 server:
-  port: 90
+  port: 93
 
 datasource:
   host: "localhost:3306"
@@ -8,9 +8,12 @@ datasource:
   dbname: "sgp_access_info_svc"
 
 paths:
-  getPersonalInfo: "/v1/sgp-info-svc/getPersonalInfo"
+  getOnePersonalInfo: "/v1/sgp-info-svc/getOneInfoPersonal"
+  getPersonalInfo: "/v1/sgp-info-svc/getInfoPersonal"
 
 app-properties:
   getComorbidity:
     idStatusActive: 1
     idStatusInactive: 2
+  getInfoPatient:
+    dateBirth-Format: '02/01/2006'

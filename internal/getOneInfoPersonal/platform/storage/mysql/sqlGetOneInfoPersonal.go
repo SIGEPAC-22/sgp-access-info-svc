@@ -2,7 +2,7 @@ package mysql
 
 import "time"
 
-type SqlGetInfoPersonal struct {
+type SqlGetOneInfoPersonal struct {
 	FirstName           string    `db:"psi_first_name"`
 	SecondName          string    `db:"psi_second_name"`
 	LastName            string    `db:"psi_first_last_name"`

@@ -12,9 +12,12 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	handler4 "sgp-access-info-svc/internal/getInfoPersonal/platform/handler"
-	mysql4 "sgp-access-info-svc/internal/getInfoPersonal/platform/storage/mysql"
-	"sgp-access-info-svc/internal/getInfoPersonal/service"
+	"sgp-access-info-svc/internal/getInfoPersonal/platform/handler"
+	"sgp-access-info-svc/internal/getInfoPersonal/platform/storage/mysql"
+	service2 "sgp-access-info-svc/internal/getInfoPersonal/service"
+	handler4 "sgp-access-info-svc/internal/getOneInfoPersonal/platform/handler"
+	mysql4 "sgp-access-info-svc/internal/getOneInfoPersonal/platform/storage/mysql"
+	"sgp-access-info-svc/internal/getOneInfoPersonal/service"
 
 	"syscall"
 )
@@ -52,13 +55,22 @@ func Run() {
 	}
 
 	/////////////////////GET PERSONAL INFO/////////////////////
-	repoGetPersonalInfo := mysql4.NewGetInfoPersonalRepository(db, kitlogger)
-	serviceGetInfoPersonal := service.NewGetInfoPersonalSvc(repoGetPersonalInfo, kitlogger)
-	endpointGetInfoPersonal := handler4.MakeGetInfoPersonalEndpoint(serviceGetInfoPersonal)
-	endpointGetInfoPersonal = handler4.GetInfoPersonalTransportMiddleware(kitlogger)(endpointGetInfoPersonal)
-	transportGetInfoPersonal := handler4.NewGetInfoPersonalHandler(config.GetString("paths.getPersonalInfo"), endpointGetInfoPersonal)
+	repoGetOnePersonalInfo := mysql4.NewGetOneInfoPersonalRepository(db, kitlogger)
+	serviceGetOneInfoPersonal := service.NewGetOneInfoPersonalSvc(repoGetOnePersonalInfo, kitlogger)
+	endpointGetOneInfoPersonal := handler4.MakeGetOneInfoPersonalEndpoint(serviceGetOneInfoPersonal)
+	endpointGetOneInfoPersonal = handler4.GetOneInfoPersonalTransportMiddleware(kitlogger)(endpointGetOneInfoPersonal)
+	transportGetOneInfoPersonal := handler4.NewGetOneInfoPersonalHandler(config.GetString("paths.getOnePersonalInfo"), endpointGetOneInfoPersonal)
 	/////////////////////GET PERSONAL INFO/////////////////////
 
+	/////////////////////GET PERSONAL INFO/////////////////////
+	repoGetPersonalInfo := mysql.NewGetInfoPersonalRepository(db, kitlogger)
+	serviceGetInfoPersonal := service2.NewGetInfoPersonalSvc(repoGetPersonalInfo, kitlogger)
+	endpointGetInfoPersonal := handler.MakeGetInfoPersonalEndpoint(serviceGetInfoPersonal)
+	endpointGetInfoPersonal = handler.GetInfoPersonalTransportMiddleware(kitlogger)(endpointGetInfoPersonal)
+	transportGetInfoPersonal := handler.NewGetInfoPersonalHandler(config.GetString("paths.getPersonalInfo"), endpointGetInfoPersonal)
+	/////////////////////GET PERSONAL INFO/////////////////////
+
+	mux.Handle(config.GetString("paths.getOnePersonalInfo"), transportGetOneInfoPersonal)
 	mux.Handle(config.GetString("paths.getPersonalInfo"), transportGetInfoPersonal)
 	mux.Handle("/health", health.NewHandler())
 
