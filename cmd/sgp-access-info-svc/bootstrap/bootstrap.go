@@ -12,6 +12,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	handler2 "sgp-access-info-svc/internal/getDocumentType/platform/handler"
+	mysql2 "sgp-access-info-svc/internal/getDocumentType/platform/storage/mysql"
+	service3 "sgp-access-info-svc/internal/getDocumentType/service"
 	"sgp-access-info-svc/internal/getInfoPersonal/platform/handler"
 	"sgp-access-info-svc/internal/getInfoPersonal/platform/storage/mysql"
 	service2 "sgp-access-info-svc/internal/getInfoPersonal/service"
@@ -70,8 +73,16 @@ func Run() {
 	transportGetInfoPersonal := handler.NewGetInfoPersonalHandler(config.GetString("paths.getPersonalInfo"), endpointGetInfoPersonal)
 	/////////////////////GET PERSONAL INFO/////////////////////
 
+	/////////////////////GET DOCUMENT TYPE/////////////////////
+	repoGetDocumentType := mysql2.NewGetDocumentTypeRepo(db, kitlogger)
+	serviceGetDocumentType := service3.NewGetDocumentTypeSvc(repoGetDocumentType, kitlogger)
+	endpointGetDocumentType := handler2.MakeGetDocumentTypeEndpoints(serviceGetDocumentType)
+	endpointGetDocumentType = handler2.GetDocumentTypeMiddleware(kitlogger)(endpointGetDocumentType)
+	transportGetDocumentType := handler2.NewGetDocumentTypeHandler(config.GetString("paths.getDocumentType"), endpointGetDocumentType)
+
 	mux.Handle(config.GetString("paths.getOnePersonalInfo"), transportGetOneInfoPersonal)
 	mux.Handle(config.GetString("paths.getPersonalInfo"), transportGetInfoPersonal)
+	mux.Handle(config.GetString("paths.getDocumentType"), transportGetDocumentType)
 	mux.Handle("/health", health.NewHandler())
 
 	go func() {

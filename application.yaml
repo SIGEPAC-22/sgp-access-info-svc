@@ -4,12 +4,13 @@ server:
 datasource:
   host: "localhost:3306"
   user: "root"
-  pass: "12345"
+  pass: "1234"
   dbname: "sgp_access_info_svc"
 
 paths:
-  getOnePersonalInfo: "/v1/sgp-info-svc/getOneInfoPersonal"
-  getPersonalInfo: "/v1/sgp-info-svc/getInfoPersonal"
+  getOnePersonalInfo: "/v1/sgp-access-info-svc/getOneInfoPersonal"
+  getPersonalInfo: "/v1/sgp-access-info-svc/getInfoPersonal"
+  getDocumentType: "/v1/sgp-access-info-svc/getDocumentType"
 
 app-properties:
   getComorbidity:
