@@ -21,6 +21,9 @@ import (
 	handler4 "sgp-access-info-svc/internal/getOneInfoPersonal/platform/handler"
 	mysql4 "sgp-access-info-svc/internal/getOneInfoPersonal/platform/storage/mysql"
 	"sgp-access-info-svc/internal/getOneInfoPersonal/service"
+	handler3 "sgp-access-info-svc/internal/getPersonalSex/platform/handler"
+	mysql3 "sgp-access-info-svc/internal/getPersonalSex/platform/storage/mysql"
+	service4 "sgp-access-info-svc/internal/getPersonalSex/service"
 
 	"syscall"
 )
@@ -80,9 +83,17 @@ func Run() {
 	endpointGetDocumentType = handler2.GetDocumentTypeMiddleware(kitlogger)(endpointGetDocumentType)
 	transportGetDocumentType := handler2.NewGetDocumentTypeHandler(config.GetString("paths.getDocumentType"), endpointGetDocumentType)
 
+	/////////////////////GET DOCUMENT TYPE/////////////////////
+	repoGetPersonalSex := mysql3.NewGetPersonalSexRepo(db, kitlogger)
+	serviceGetPersonalSex := service4.NewGetPersonalSexSvc(repoGetPersonalSex, kitlogger)
+	endpointGetPersonalSex := handler3.MakeGetPersonalSexEndpoints(serviceGetPersonalSex)
+	endpointGetPersonalSex = handler3.GetPersonalSexMiddleware(kitlogger)(endpointGetPersonalSex)
+	transportGetPersonalSex := handler3.NewGetPersonalSexHandler(config.GetString("paths.getPersonalSex"), endpointGetPersonalSex)
+
 	mux.Handle(config.GetString("paths.getOnePersonalInfo"), transportGetOneInfoPersonal)
 	mux.Handle(config.GetString("paths.getPersonalInfo"), transportGetInfoPersonal)
 	mux.Handle(config.GetString("paths.getDocumentType"), transportGetDocumentType)
+	mux.Handle(config.GetString("paths.getPersonalSex"), transportGetPersonalSex)
 	mux.Handle("/health", health.NewHandler())
 
 	go func() {
