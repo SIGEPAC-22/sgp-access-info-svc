@@ -19,10 +19,10 @@ func NewGetOneInfoPersonalRepository(db *sql.DB, logger kitlog.Logger) *GetOneIn
 	return &GetOneInfoPersonalRepository{db: db, logger: logger}
 }
 
-func (g *GetOneInfoPersonalRepository) GetOneInfoPersonalRepo(ctx context.Context, DocumentNumber string) (getOneInfoPersonal.GetOneInfoPersonalResponse, error) {
+func (g *GetOneInfoPersonalRepository) GetOneInfoPersonalRepo(ctx context.Context, id int) (getOneInfoPersonal.GetOneInfoPersonalResponse, error) {
 
 	config := goconfig.NewConfig("./application.yaml", goconfig.Yaml)
-	rowsSql := g.db.QueryRowContext(ctx, "SELECT psi_first_name, psi_second_name, psi_first_last_name, psi_second_last_name, pss_personal_sex.pss_gender_name, psi_date_of_birth, dct_document_name,\npsi_document_number, psi_user, tur_name_type, psi_account_creation_date, std_state_name from psi_personal_information\ninner join pss_personal_sex\non pss_personal_sex.pss_id = psi_personal_information.psi_sex_id\ninner join dct_document_type\non dct_document_type.dct_id = psi_personal_information.psi_document_type_id\ninner join tur_type_user\non tur_type_user.tur_id = psi_personal_information.psi_type_user\ninner join std_state_data\non std_state_data.std_id = psi_personal_information.psi_state_data_id\nwhere psi_document_number = ?;", DocumentNumber)
+	rowsSql := g.db.QueryRowContext(ctx, "SELECT psi_first_name, psi_second_name, psi_first_last_name, psi_second_last_name, pss_personal_sex.pss_gender_name, psi_date_of_birth, dct_document_name,\npsi_document_number, psi_user, tur_name_type, psi_account_creation_date, std_state_name from psi_personal_information\ninner join pss_personal_sex\non pss_personal_sex.pss_id = psi_personal_information.psi_sex_id\ninner join dct_document_type\non dct_document_type.dct_id = psi_personal_information.psi_document_type_id\ninner join tur_type_user\non tur_type_user.tur_id = psi_personal_information.psi_type_user\ninner join std_state_data\non std_state_data.std_id = psi_personal_information.psi_state_data_id\nwhere psi_id = ?;", id)
 	var respDB SqlGetOneInfoPersonal
 	if err := rowsSql.Scan(&respDB.FirstName, &respDB.SecondName, &respDB.LastName, &respDB.SecondLastName, &respDB.Sex, &respDB.DateOfBirth, &respDB.TypeDocument, &respDB.DocumentNumber, &respDB.User, &respDB.TypeUser, &respDB.DateCreationAccount, &respDB.StateName); err != nil {
 		g.logger.Log("Data not found", constants.UUID, ctx.Value(constants.UUID))

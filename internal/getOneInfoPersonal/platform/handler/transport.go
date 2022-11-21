@@ -25,9 +25,10 @@ func DecodeRequestGetOneInfoPersonal(ctx context.Context, r *http.Request) (inte
 	processID, _ := uuid.NewUUID()
 	ctx = context.WithValue(ctx, constants.UUID, processID.String())
 	var confRequest GetOneInfoPersonalInternalRequest
-	err := json.NewDecoder(r.Body).Decode(&confRequest)
+	id := r.URL.Query().Get("id")
+	confRequest.Id = id
 	confRequest.ctx = ctx
-	return confRequest, err
+	return confRequest, nil
 }
 
 func EncodeRequestGetOneInfoPersonal(ctx context.Context, w http.ResponseWriter, response interface{}) error {

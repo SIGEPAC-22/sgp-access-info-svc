@@ -3,15 +3,15 @@ package getOneInfoPersonal
 import "context"
 
 type Repository interface {
-	GetOneInfoPersonalRepo(ctx context.Context, DocumentNumber string) (GetOneInfoPersonalResponse, error)
+	GetOneInfoPersonalRepo(ctx context.Context, id int) (GetOneInfoPersonalResponse, error)
 }
 
 type Service interface {
-	GetOneInfoPersonalSvc(ctx context.Context, DocumentNumber string) (GetOneInfoPersonalResponse, error)
+	GetOneInfoPersonalSvc(ctx context.Context, id string) (GetOneInfoPersonalResponse, error)
 }
 
 type GetOneInfoPersonalRequest struct {
-	DocumentNumber string `json:"documentNumber"`
+	Id string `json:"id"`
 }
 
 type GetOneInfoPersonalResponse struct {
