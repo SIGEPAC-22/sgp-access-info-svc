@@ -15,6 +15,7 @@ type GetOneInfoPersonalRequest struct {
 }
 
 type GetOneInfoPersonalResponse struct {
+	Id                  int    `json:"id"`
 	FirstName           string `json:"firstName"`
 	SecondName          string `json:"secondName"`
 	LastName            string `json:"lastName"`

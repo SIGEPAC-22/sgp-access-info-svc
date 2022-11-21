@@ -3,6 +3,7 @@ package mysql
 import "time"
 
 type SqlGetOneInfoPersonal struct {
+	Id                  int       `db:"psi_id"`
 	FirstName           string    `db:"psi_first_name"`
 	SecondName          string    `db:"psi_second_name"`
 	LastName            string    `db:"psi_first_last_name"`
