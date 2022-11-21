@@ -11,6 +11,7 @@ type Service interface {
 }
 
 type GetInfoPersonalResponse struct {
+	Id                  int    `json:"id"`
 	FirstName           string `json:"firstName"`
 	SecondName          string `json:"secondName"`
 	LastName            string `json:"lastName"`
