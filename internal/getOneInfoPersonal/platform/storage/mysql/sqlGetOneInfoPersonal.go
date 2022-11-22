@@ -13,6 +13,7 @@ type SqlGetOneInfoPersonal struct {
 	TypeDocument        string    `db:"dct_document_name"`
 	DocumentNumber      string    `db:"psi_document_number"`
 	User                string    `db:"psi_user"`
+	Password            string    `db:"psi_password"`
 	TypeUser            string    `db:"tur_name_type"`
 	DateCreationAccount time.Time `db:"psi_account_creation_date"`
 	StateName           string    `db:"std_state_name"`

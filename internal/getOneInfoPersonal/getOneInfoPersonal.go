@@ -25,6 +25,7 @@ type GetOneInfoPersonalResponse struct {
 	TypeDocument        string `json:"typeDocument"`
 	DocumentNumber      string `json:"documentNumber"`
 	User                string `json:"user"`
+	Password            string `json:"password"`
 	TypeUser            string `json:"typeUser"`
 	DateCreationAccount string `json:"dateCreationAccount"`
 	StateName           string `json:"stateName"`
