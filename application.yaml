@@ -12,6 +12,7 @@ paths:
   getPersonalInfo: "/v1/sgp-access-info-svc/getInfoPersonal"
   getDocumentType: "/v1/sgp-access-info-svc/getDocumentType"
   getPersonalSex: "/v1/sgp-access-info-svc/getPersonalSex"
+  getTypeUser: "/v1/sgp-access-info-svc/getTypeUser"
 
 app-properties:
   getComorbidity:

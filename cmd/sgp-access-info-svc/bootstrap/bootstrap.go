@@ -24,7 +24,9 @@ import (
 	handler3 "sgp-access-info-svc/internal/getPersonalSex/platform/handler"
 	mysql3 "sgp-access-info-svc/internal/getPersonalSex/platform/storage/mysql"
 	service4 "sgp-access-info-svc/internal/getPersonalSex/service"
-
+	handler5 "sgp-access-info-svc/internal/getTypeUser/platform/handler"
+	mysql5 "sgp-access-info-svc/internal/getTypeUser/platform/storage/mysql"
+	service5 "sgp-access-info-svc/internal/getTypeUser/service"
 	"syscall"
 )
 
@@ -61,12 +63,20 @@ func Run() {
 	}
 
 	/////////////////////GET PERSONAL INFO/////////////////////
-	repoGetOnePersonalInfo := mysql4.NewGetOneInfoPersonalRepository(db, kitlogger)
-	serviceGetOneInfoPersonal := service.NewGetOneInfoPersonalSvc(repoGetOnePersonalInfo, kitlogger)
+	repoGetOneInfoPersonal := mysql4.NewGetOneInfoPersonalRepository(db, kitlogger)
+	serviceGetOneInfoPersonal := service.NewGetOneInfoPersonalSvc(repoGetOneInfoPersonal, kitlogger)
 	endpointGetOneInfoPersonal := handler4.MakeGetOneInfoPersonalEndpoint(serviceGetOneInfoPersonal)
 	endpointGetOneInfoPersonal = handler4.GetOneInfoPersonalTransportMiddleware(kitlogger)(endpointGetOneInfoPersonal)
 	transportGetOneInfoPersonal := handler4.NewGetOneInfoPersonalHandler(config.GetString("paths.getOnePersonalInfo"), endpointGetOneInfoPersonal)
 	/////////////////////GET PERSONAL INFO/////////////////////
+
+	///////////////////////////////////GET TYPE USER///////////////////////////////////
+	repoGetTypeUser := mysql5.NewGetTypeUserRepo(db, kitlogger)
+	serviceGetTypeUser := service5.NewGetTypeUserSvc(repoGetTypeUser, kitlogger)
+	endpointGetTypeUser := handler5.MakeGetTypeUserEndpoints(serviceGetTypeUser)
+	endpointGetTypeUser = handler5.GetTypeUserMiddleware(kitlogger)(endpointGetTypeUser)
+	transportGetTypeUser := handler5.NewGetTypeUserHandler(config.GetString("paths.getTypeUser"), endpointGetTypeUser)
+	///////////////////////////////////GET TYPE USER///////////////////////////////////
 
 	/////////////////////GET PERSONAL INFO/////////////////////
 	repoGetPersonalInfo := mysql.NewGetInfoPersonalRepository(db, kitlogger)
@@ -90,6 +100,7 @@ func Run() {
 	endpointGetPersonalSex = handler3.GetPersonalSexMiddleware(kitlogger)(endpointGetPersonalSex)
 	transportGetPersonalSex := handler3.NewGetPersonalSexHandler(config.GetString("paths.getPersonalSex"), endpointGetPersonalSex)
 
+	mux.Handle(config.GetString("paths.getTypeUser"), transportGetTypeUser)
 	mux.Handle(config.GetString("paths.getOnePersonalInfo"), transportGetOneInfoPersonal)
 	mux.Handle(config.GetString("paths.getPersonalInfo"), transportGetInfoPersonal)
 	mux.Handle(config.GetString("paths.getDocumentType"), transportGetDocumentType)
