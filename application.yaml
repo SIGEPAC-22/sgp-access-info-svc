@@ -1,0 +1,22 @@
+server:
+  port: 90
+
+datasource:
+  host: "sgp-access-info-svc.csntzsasnlad.us-east-1.rds.amazonaws.com:3306"
+  user: "sgpaccessinfosvc"
+  pass: "test1234"
+  dbname: "sgp_access_info_svc"
+
+paths:
+  getOnePersonalInfo: "/v1/sgp-access-info-svc/getOneInfoPersonal"
+  getPersonalInfo: "/v1/sgp-access-info-svc/getInfoPersonal"
+  getDocumentType: "/v1/sgp-access-info-svc/getDocumentType"
+  getPersonalSex: "/v1/sgp-access-info-svc/getPersonalSex"
+  getTypeUser: "/v1/sgp-access-info-svc/getTypeUser"
+
+app-properties:
+  getComorbidity:
+    idStatusActive: 1
+    idStatusInactive: 2
+  getInfoPatient:
+    dateBirth-Format: '02/01/2006'
