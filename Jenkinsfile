@@ -2,7 +2,7 @@ pipeline {
   agent any
   environment {
     name_final = "sgp-access-info-svc"
-    DB_CREDS = credentials('db-creds')
+    DB_CREDS = credentials('sgpaccessinfosvc')
   }
   stages {
     stage('Docker Build') {
@@ -64,10 +64,10 @@ pipeline {
       steps {
         script {
           sh '''
-          docker run --rm flyway/flyway:8.5.1 version
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW migrate
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW validate
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW info
+          docker run --rm flyway/flyway:9.8.3 version
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW migrate
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW validate
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW info
 	  '''
         }
       }
@@ -86,7 +86,7 @@ pipeline {
       steps {
         script {
           sh '''
-          docker run -dt -p 30002:90 --name ${name_final} ${name_final}
+          docker run -dt -p 30003:90 --name ${name_final} ${name_final}
           docker system prune -f
 	  '''
         }
@@ -104,7 +104,7 @@ pipeline {
         }
       }
       steps {
-        echo 'SonarQube'
+        echo 'Cucumber Tests'
       }
     }
     stage('RUN DB QA') {
@@ -120,10 +120,10 @@ pipeline {
       steps {
         script {
           sh '''
-          docker run --rm flyway/flyway:8.5.1 version
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW migrate
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW validate
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW info
+          docker run --rm flyway/flyway:9.8.3 version
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW migrate
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW validate
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW info
 	  '''
         }
       }
@@ -146,13 +146,13 @@ pipeline {
             docker stop ${name_final}
             docker rm -vf ${name_final}
             docker build . -t ${name_final}
-            docker run -dt -p 30002:90 --name ${name_final} ${name_final}
+            docker run -dt -p 30103:90 --name ${name_final} ${name_final}
             docker system prune -f
 	    '''
           } else {
             sh '''
             docker build . -t ${name_final}
-            docker run -dt -p 30002:90 --name ${name_final} ${name_final}
+            docker run -dt -p 30103:90 --name ${name_final} ${name_final}
             docker system prune -f
 	    '''
           }
@@ -180,10 +180,10 @@ pipeline {
       steps {
         script {
           sh '''
-          docker run --rm flyway/flyway:8.5.1 version
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW migrate
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW validate
-          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:8.5.1 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW info
+          docker run --rm flyway/flyway:9.8.3 version
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW migrate
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW validate
+          docker run --rm -v $WORKSPACE/sql:/flyway/sql -v $WORKSPACE/sql:/flyway/conf flyway/flyway:9.8.3 -user=$DB_CREDS_USR -password=$DB_CREDS_PSW info
 	  '''
         }
       }
@@ -203,13 +203,13 @@ pipeline {
             docker stop ${name_final}
             docker rm -vf ${name_final}
             docker build . -t ${name_final}
-            docker run -dt -p 30002:90 --name ${name_final} ${name_final}
+            docker run -dt -p 30203:90 --name ${name_final} ${name_final}
             docker system prune -f
 	    '''
           } else {
             sh '''
             docker build . -t ${name_final}
-            docker run -dt -p 30002:90 --name ${name_final} ${name_final}
+            docker run -dt -p 30203:90 --name ${name_final} ${name_final}
             docker system prune -f
 	    '''
           }
